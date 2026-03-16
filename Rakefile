@@ -1,27 +1,24 @@
 #!/usr/bin/env ruby
 
 require 'rake/testtask'
-require 'rubygems'
-require 'rake'
-require 'haml'
+require 'fileutils'
 
+# Default task just calls compile
 task default: :compile
 
+# Dummy compile task (does nothing)
 task :compile do
-  FileList.new('./src/*.html.haml').each do |filename|
-    if filename =~ /([^\/]+)\.haml$/
-      File.open($1, 'w') do |f|
-        f.write Haml::Engine.new(File.read(filename)).render
-      end
-    end
-  end
+  puts "Skipping compile task..."
 end
 
+# Clean generated HTML files
 task :clean do
   FileUtils.rm_r(Dir.glob("./*.html"), force: true)
+  puts "Cleaned HTML files"
 end
 
-task :test do 
+# Run tests
+task :test do
   Rake::TestTask.new do |t|
     t.test_files = FileList['test/jenkins_sample_test.rb']
   end
