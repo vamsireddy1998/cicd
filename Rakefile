@@ -12,8 +12,12 @@ task :build do
   if Dir["src/*.haml"].any?
     puts "Found HAML files, compiling..."
     Dir["src/*.haml"].each do |haml_file|
+      # Generate output filename
       html_file = "build/html/" + File.basename(haml_file, ".haml") + ".html"
-      sh "haml #{haml_file} #{html_file}"
+      puts "Compiling #{haml_file} -> #{html_file}"
+      
+      # Correct haml command syntax - using the executable properly
+      sh "haml < #{haml_file} > #{html_file}"
     end
   else
     puts "No HAML files found, creating sample HTML"
@@ -49,4 +53,6 @@ task :package do
   mkdir_p "deploy/build"
   cp_r "build", "deploy/"
   puts "Package created in deploy/ directory"
+  puts "Package contents:"
+  sh "ls -la deploy/build/html/"
 end
